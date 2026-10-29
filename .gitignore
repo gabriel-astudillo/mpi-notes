@@ -1,0 +1,6 @@
+.DS_Store
+.Trash*
+.ipynb_*
+
+# MyST build outputs
+_build
