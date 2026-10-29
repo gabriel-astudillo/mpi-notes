@@ -8,7 +8,7 @@ Implementar un programa que muestre en pantalla un texto "Hola Mundo. Proceso id
 
 ## Paso 1
 
-Lo primero es pensar en una solución completamente secuencial. Se crean dos variables `rank`y `size` para guardar el identificador del proceso y el total de procesos que existen en el ambiente paralelo, respectivamente.
+Lo primero es pensar en una solución completamente secuencial. Se crean dos variables `rank` y `size` para guardar el identificador del proceso y el total de procesos que existen en el ambiente paralelo, respectivamente.
 
 ```{code} C
 #include <stdio.h>
