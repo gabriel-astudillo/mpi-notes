@@ -1,0 +1,24 @@
+services:
+  jappy:
+    platform: linux/amd64      # Jappy está implementado sobre arquitecturas amd64 o IA64
+    
+    #container_name: dev-jappy # descomentar si se quiere mantener el nombre del contenedor.
+                               # Esto implica que deberá eliminar el contenedor si quiere cambiar
+                               # la carpeta de trabajo.
+                               # Si está comentado, docker asignará un contenedor distinto por cada
+                               # carpeta de trabajo. 
+    
+    image: gastudil/courses:jappy-jupyter-latest
+    hostname: dev-jappy
+    ports:
+      - 8888:8888
+      - 3000:3000
+      - 3100:3100
+    volumes:
+      #- ./workspace:/home/devuser/workspace
+      - ./:/home/devuser/
+    networks:
+      - back_net
+
+networks:
+  back_net:
