@@ -93,7 +93,7 @@ int main(int argc, char* argv[]){
 Después de compilar con `mpicc`, el ejecutable se debe llamar a través de `mpirun`. Por ejemplo, si se quiere ejecutar el código en 5 procesos:
 
 ```
-$ mpirun -n 5 ./example
+$ mpirun -n 5 ./ejemplo
 Hola Mundo. Proceso id=0. Total=5
 Hola Mundo. Proceso id=1. Total=5
 Hola Mundo. Proceso id=2. Total=5
@@ -102,4 +102,6 @@ Hola Mundo. Proceso id=4. Total=5
 $
 ```
 
-Se debe tener en consideración que el orden de ejecución de los procesos no es determinista.
+La instruccion `mpirun -n 5 ./ejemplo` lanza 5 PROCESOS del programa escrito. Cada uno de ellos ejecuta el código indicando su numero identificador, obtenido de la función `MPI_Comm_rank`, y el número de procesos que hay en ejecución, obtenido de la función `MPI_Comm_size`. La función `MPI_Init` se encarga de inicializar el entorno paralelo para que se puedan comunicar los distintos procesos. Esto significa que se debe llamar antes de cualquier otra función `MPI`. Por último, `MPI_Finalize` libera el entorno MPI creado.
+
+Cuando se ejecuta varios procesos al mismo tiempo, se debe tener en consideración que el orden de ejecución de los procesos no es determinista.

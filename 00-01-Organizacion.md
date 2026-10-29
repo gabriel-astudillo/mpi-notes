@@ -2,7 +2,7 @@
 title: Organización
 ---
 
-La asignatura está estructurada en forma progresiva. A lo largo del semestre se abordarán varios temas que se agrupan en tres unidades de aprendizaje, las que se detallan en la {numref}`Tabla %s <unidades_aprendizaje>`
+Estos apuntes está estructurados en dos unidades y su objetivo es iniciar a los estudiantes en el ámbito de la programación paralela basada en procesos. Las unidades de aprendizaje se detallan en la {numref}`Tabla %s <unidades_aprendizaje>`
 
 ::::{tab-set}
 :label:unidades_aprendizaje
