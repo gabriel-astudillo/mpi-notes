@@ -49,13 +49,6 @@ En la función `main()`, se debe indicar que se va a crear un ambiente paralelo 
 MPI_Init(&argc, &argv);
 ```
 
-:::{note} `MPI_Init()`
-:class: dropdown
-:open: false
-
-La función [](#MPI_Init) utiliza los argumentos del proceso para inicializar el ambiente paralelo. Este tiene sentido ya que la cantidad de procesos y su configuración son pasados a través de `argv` en el programa compilado.
-:::
-
 Luego, se le debe indicar a MPI que modifique en forma adecuada las variables `rank` y `size`. El valor de variables las determina a través de las variables de estado del ambiente paralelo cuyo descriptor es `MPI_COMM_WORLD` (ver [](#constantes)), utilizando las funciones [](#MPI_Comm_rank) y [](#MPI_Comm_size)
 
 ```{code} C
