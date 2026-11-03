@@ -16,6 +16,8 @@ project:
     - title: Unidad 1
       children:
         - file: 01-00-README.md
+        - file: 01-01-README.md
+        - file: 01-02-Func-MPI.md
     - title: Unidad 2
       children:
         - file: 02-00-README.md
