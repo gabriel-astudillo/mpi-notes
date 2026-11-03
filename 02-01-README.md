@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 }
 ```
 
-Obtenido el numero de procesos (`size`) y el rango (`rank`), el envío del mensaje se realiza al proceso siguiente (rank aumentado en 1). Debido a esto, el proceso destino debe indicar que quiere recibir un mensaje del proceso inmediatamente anterior. En la solución propuesta se hace una distinción ya que no todos los procesos hacen lo mismo, el primero no recibirá de nadie y el último no envía ningún mensaje. Esto se especifica mediante condiciones que filtran el rango del proceso.
+Obtenido el numero de procesos (`size`) y el rango (`rank`), el envío del mensaje se realiza al proceso siguiente (`rank` aumentado en 1). Debido a esto, el proceso destino debe indicar que quiere recibir un mensaje del proceso inmediatamente anterior. En la solución propuesta se hace una distinción ya que no todos los procesos hacen lo mismo, el primero no recibirá de nadie y el último no envía ningún mensaje. Esto se especifica mediante condiciones que filtran el rango del proceso.
 
 ### Salida
 

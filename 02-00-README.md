@@ -43,7 +43,7 @@ Se debe incluir la biblioteca **MPI**:
 #include <mpi.h>
 ```
 
-En la función `main()`, se debe indicar que se va a crear un ambiente paralelo de trabajo. Para esto, se debe utilizar la función `MPI_Init()`. El ambiente de trabajo paralelo creado por esta función, queda visible a través de la variable `MPI_COMM_WORLD`.
+En la función `main()`, se debe indicar que se va a crear un ambiente paralelo de trabajo. Para esto, se debe utilizar la función [](#MPI_Init). El ambiente de trabajo paralelo creado por esta función, queda visible a través de la variable `MPI_COMM_WORLD` (ver [](#constantes)).
 
 ```{code} C
 MPI_Init(&argc, &argv);
@@ -53,10 +53,10 @@ MPI_Init(&argc, &argv);
 :class: dropdown
 :open: false
 
-La función `MPI_Init()` utiliza los argumentos del proceso para inicializar el ambiente paralelo. Este tiene sentido ya que la cantidad de procesos y su configuración son pasados a través de `argv` en el programa compilado.
+La función [](#MPI_Init) utiliza los argumentos del proceso para inicializar el ambiente paralelo. Este tiene sentido ya que la cantidad de procesos y su configuración son pasados a través de `argv` en el programa compilado.
 :::
 
-Luego, se le debe indicar a MPI que modifique en forma adecuada las variables `rank` y `size`. El valor de variables las determina a través de las variables de estado del ambiente paralelo cuyo descriptor es `MPI_COMM_WORLD`:
+Luego, se le debe indicar a MPI que modifique en forma adecuada las variables `rank` y `size`. El valor de variables las determina a través de las variables de estado del ambiente paralelo cuyo descriptor es `MPI_COMM_WORLD` (ver [](#constantes)), utilizando las funciones [](#MPI_Comm_rank) y [](#MPI_Comm_size)
 
 ```{code} C
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -102,6 +102,6 @@ Hola Mundo. Proceso id=4. Total=5
 $
 ```
 
-La instruccion `mpirun -n 5 ./ejemplo` lanza 5 PROCESOS del programa escrito. Cada uno de ellos ejecuta el código indicando su numero identificador, obtenido de la función `MPI_Comm_rank`, y el número de procesos que hay en ejecución, obtenido de la función `MPI_Comm_size`. La función `MPI_Init` se encarga de inicializar el entorno paralelo para que se puedan comunicar los distintos procesos. Esto significa que se debe llamar antes de cualquier otra función `MPI`. Por último, `MPI_Finalize` libera el entorno MPI creado.
+La instruccion `mpirun -n 5 ./ejemplo` lanza 5 PROCESOS del programa escrito. Cada uno de ellos ejecuta el código indicando su numero identificador, obtenido de la función [](#MPI_Comm_rank) , y el número de procesos que hay en ejecución, obtenido de la función [](#MPI_Comm_rank) . La función [](#MPI_Init)  se encarga de inicializar el entorno paralelo para que se puedan comunicar los distintos procesos. Esto significa que se debe llamar antes de cualquier otra función `MPI`. Por último, [](#MPI_Finalize)  libera el entorno MPI creado.
 
 Cuando se ejecuta varios procesos al mismo tiempo, se debe tener en consideración que el orden de ejecución de los procesos no es determinista.

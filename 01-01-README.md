@@ -2,6 +2,7 @@
 
 Las etiquetas de constantes se definen para especificar a las funciones de MPI el tipo de dato que va a enviar o recibir.
 
+(constantes)=
 ## Constantes
 
 ```{csv-table}
