@@ -23,7 +23,6 @@ Estos apuntes está estructurados en dos unidades y su objetivo es iniciar a los
 :header: Estructuras básicas de comunicación paralela ✨
 1. Método general de construcción de un programa basado en MPI.
 2. Enviar y recibir datos primitivos.
-3. Ejemplo de aplicación.
-4. Enviar y recibir datos organizados en arreglos.
+3. Enviar y recibir datos organizados en arreglos.
 :::
 

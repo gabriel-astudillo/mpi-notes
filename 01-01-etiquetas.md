@@ -25,6 +25,7 @@ MPI_Status,"Guarda datos sobre operaciones de recepción de mensajes. Este tipo 
 , `count`: Tamaño del mensaje en bytes.
 ```
 
+(tipos-mpi)=
 ## Tipos de datos en MPI para envío y recepción de mensajes
 
 Se utilizan para especificar el tipo de dato de cada elemento que participa en la operación de envío o recepción (como `MPI_Send` o `MPI_Recv`).
@@ -52,4 +53,28 @@ Se utilizan para especificar el tipo de dato de cada elemento que participa en l
 `MPI_PACKED`,Para las funciones MPI_Pack y MPI_Unpack
 `MPI_UB`,"Para el tipo de dato MPI_Type_struct, un indicador del límite superior."
 `MPI_LB`,"Para el tipo de dato MPI_Type_struct, un indicador del límite inferior."
+```
+(funciones-reduccion)=
+## Funciones de reducción
+
+Las funciones de reducción (tales como [](#MPI_Reduce), [](#MPI_Allreduce)) realizan una operación de reducción global (como puede ser calcular el máximo, la suma, hacer un AND lógico, etc) sobre cada uno de los miembros del grupo. La operación de reducción puede ser tanto una predefinida de la lista de operaciones como una operación definida por el usuario.
+
+Se puede notar que únicamente se especifica una vez el número de datos y el tipo de datos, esto es porque el número de datos es el mismo tanto en la emisión como en la recepción, al igual que el tipo. Si el número de datos es mayor que uno, la operación de reducción se realiza uno a uno cada elemento con su posición correspondiente (es decir, el elemento 1 de envío se reduce con cada elemento en la posición 1 de cada sendbuf).
+
+
+```{csv-table}
+:header: Función de reducción,Descripción
+:enumerated: false
+`MPI_MAX`,"Máximo entre los elementos"
+`MPI_MIN`,"Mínimo entre los elementos"
+`MPI_SUM`,"Suma"
+`MPI_PROD`,"Producto"
+`MPI_LAND`,"AND lógico (devuelve 1 o 0, verdadero o falso)"
+`MPI_BAND`,"AND a nivel de bits"
+`MPI_LOR`,"OR lógico"
+`MPI_BOR`,"OR a nivel de bits"
+`MPI_LXOR`,"XOR lógico"
+`MPI_BXOR`,"XOR a nivel de bits"
+`MPI_MAXLOC`,"Valor máximo entre los elementos y el rango del proceso que lo tenía"
+`MPI_MINLOC`,"Valor mínimo entre los elementos y el rango del proceso que lo tenía"
 ```

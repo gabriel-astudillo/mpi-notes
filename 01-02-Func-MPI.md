@@ -187,6 +187,78 @@ int MPI_Recv(void *buf,             // referencia al vector de elementos a envia
 ```
 :::
 
+(MPI_Bcast)=
+:::{note} `MPI_Bcast()`
+:class: dropdown
+:open: false
+
+**Sintaxis**
+```{code} C
+int MPI_Bcast(void *buffer,           // Dirección inicial del buffer (a enviar para la raíz y a recibir por el resto).
+              int count,              // Número de elementos en el buffer (int).
+              MPI_Datatype datatype,  // Tipo de dato de los elementos del buffer (Por ejemplo, `MPI_INT`).
+			  int root,               // Rank del proceso que transmitirá el mensaje al resto (int).
+              MPI_Comm comm           // Comunicador por el que se realiza la transmisión.
+              )
+```
+
+**Descripción**
+
+MPI_Bcast envía un único mensaje desde el proceso que tenga el rango de raíz (root) a todos los procesos del grupo (en general, los del comunicador especificado), incluyendose a sí mismo. Todos los procesos llaman a la función exactamente de la misma manera, usando siempre los mismos argumentos para comm (el comunicador) y para el proceso raíz (root). Cuando se haya completado la función, todos los procesos tendrán una copia en su buffer de entrada de lo enviado por el proceso raíz.
+
+En general los tipos de datos derivados están permitidos para el parámetro datatype. La concordancia en tamaño entre los tipos de datos especificados por los procesos receptores y del emisor debe ser igual. Esto implica que la cantidad de datos enviados debe ser la misma cantidad que los datos recibidos entre cada proceso con la raíz (root). Todas las rutinas de envío y recepción de datos a colectivos (o entre colectivos) tienen esta restricción impuesta.
+:::
+
+(MPI_Reduce)=
+:::{note} `MPI_Reduce()`
+:class: dropdown
+:open: false
+
+**Sintaxis**
+```{code} C
+int MPI_Reduce(void *sendbuf,         // Dirección inicial del buffer en envío.
+               void *recvbuf,         // Dirección inicial del buffer de recepción, 
+                                      // útil únicamente para el proceso raíz.
+               int count,             // Número de elementos que se va a enviar del 
+                                      // buffer de envío (int).
+               MPI_Datatype datatype, // Tipo de datos de los elementos del buffer de 
+                                      // envío (por ejemplo MPI_INT).
+               MPI_Op op,             // Operación de reducción, constante definida 
+                                      // por MPI.
+               int root,              // Rango del proceso raíz, el proceso receptor.
+               MPI_Comm comm          // Comunicador que se utiliza.
+               )
+```
+
+**Descripción**
+
+Reduce un valor de un grupo de procesos en un único proceso raíz. La operación de reducción están definidas en [acá](#funciones-reduccion).
+:::
+
+(MPI_Allreduce)=
+:::{note} `MPI_Allreduce()`
+:class: dropdown
+:open: false
+
+**Sintaxis**
+```{code} C
+int MPI_Allreduce(void *sendbuf,          // Dirección inicial del buffer en envío.
+                  void *recvbuf,          // Dirección inicial del buffer de recepción.
+                  int count,              // Número de elementos que se va a enviar del 
+                                          // buffer de envío.
+                  MPI_Datatype datatype,  // Tipo de datos de los elementos del buffer de 
+                                          // envío (por ejemplo `MPI_INT`).
+                  MPI_Op op,              // Operación de reducción, constante definida 
+                                          // por MPI
+                  MPI_Comm comm           // Comunicador que se utiliza.
+                  )
+```
+
+**Descripción**
+
+Similar a [](#MPI_Reduce). El resultado se redistribuye entre todos los procesos. La operación de reducción están definidas en [acá](#funciones-reduccion).
+:::
+
 
 (MPI_Wtime)=
 :::{note} `MPI_Wtime()`

@@ -16,12 +16,13 @@ project:
     - title: Unidad 1
       children:
         - file: 01-00-README.md
-        - file: 01-01-README.md
+        - file: 01-01-etiquetas.md
         - file: 01-02-Func-MPI.md
     - title: Unidad 2
       children:
-        - file: 02-00-README.md
-        - file: 02-01-README.md
+        - file: 02-00-construc-mpi.md
+        - file: 02-01-send-recv-simple.md
+        - file:  02-02-send-recv-arrays.md
   exports:
     - format: pdf
   bibliography:
