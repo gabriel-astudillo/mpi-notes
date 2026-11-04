@@ -259,6 +259,97 @@ int MPI_Allreduce(void *sendbuf,          // Dirección inicial del buffer en en
 Similar a [](#MPI_Reduce). El resultado se redistribuye entre todos los procesos. La operación de reducción están definidas en [acá](#funciones-reduccion).
 :::
 
+(MPI_Scatter)=
+:::{note} `MPI_Scatter()`
+:class: dropdown
+:open: false
+
+**Sintaxis**
+```{code} C
+int MPI_Scatter(void *sendbuf,         // Dirección inicial del buffer de salida.
+                                       // Útil sólo para el proceso raíz, el resto 
+                                       // de procesos ignoran este parámetro.
+                int sendcount,         // Número de elementos que se envía a cada 
+                                       // proceso del comunicador. Sólo tiene sentido 
+                                       // en el proceso raíz.
+                MPI_Datatype sendtype, // Tipo de dato que se va a enviar, solo lo 
+                                       // tendrá en cuenta la raíz (Como por ejemplo MPI_INT).
+                void *recvbuf,         // Direción del buffer de recepción (para todos 
+                                       // los procesos, incluido el proceso raíz).
+                int recvcount,         // Número de elementos que espera recibir
+                                       // cada proceso.
+                MPI_Datatype recvtype, // Tipo de datos de los elementos a recibir 
+                                       // (Como por ejemplo MPI_INT).
+                int root,              // Rank del proceso raíz (el que realizará el envío).
+                MPI_Comm comm          // Comunicador 
+                )
+```
+
+**Descripción**
+
+El funcionamiento es como si la raíz ejecutara n operaciones de envío, una a cada proceso que ejecutase la función. En cada operación se enviaría un trozo de igual tamaño del mensaje completo original de forma ordenada.
+
+Esto significa que el mensaje original se parte en n partes iguales, que es exactamente el valor que debe tener recvcount. Los tipos tanto de envío como de recepción deben ser iguales. 
+
+Esto significa que la cantidad de datos enviados debe ser la misma que el conjunto de los datos recibidos. Todos los argumentos de la función son importantes para el proceso raíz, sin embargo para el resto de procesos únicamente se tiene en cuenta los argumentos `recvbuf`, `recvcount`, `recvtype`, `root`. Los argumentos `root` y `comm` deben tener un valor idéntico en todos los procesos.
+
+`MPI_Scatter` es la operación inversa de [](#MPI_Gather).
+:::
+
+(MPI_Gather)=
+:::{note} `MPI_Gather()`
+:class: dropdown
+:open: false
+
+**Sintaxis**
+```{code} C
+int MPI_Gather(void *sendbuf,          // Dirección inicial del buffer de envío.
+               int sendcount,          // Número de elementos que va a enviar cada proceso 
+                                       // individualmente, en general, el número de elementos 
+                                       // del buffer de envío.
+               MPI_Datatype sendtype,  // Tipo de dato de cada elemento del buffer de envío.
+               void *recvbuf,          // Dirección inicial del buffer de recepción.
+                                       // Útil solamente para el proceso raíz.
+               int recvcount,          // Número de elementos que se espera recibir de cada 
+                                       // uno de los procesos (solo el proceso raíz tendrá este 
+                                       // parámetro en cuenta). Nótese que este valor es igual 
+                                       // que sendcount siempre y cuando los tipos de envío y 
+                                       // recepción sean los mismos.
+               MPI_Datatype recvtype,  // Tipo de dato que se espera recibir en el buffer de 
+                                       // entrada. Útil únicamente para el proceso raíz.
+               int root,               // Rank del proceso raíz (el proceso receptor) 
+               MPI_Comm comm           // Comunicator
+               )
+```
+
+**Descripción**
+
+Cada proceso (incluido el proceso raíz) envía el contenido de su buffer de salida al proceso raíz. El proceso raíz recibe los mensajes y los guarda por el orden del rango de cada proceso. El resultado final es que se reune en el proceso raíz el mensaje completo y ordenado.
+
+De forma alternativa, podemos explicarlo como que los n mensajes son concatenados por el orden del rango, resultando en un único mensaje como si se tratara de una operación de recepción normal (MPI_Recv(recvbuf, recvcount* n, recvtype, ...)).
+
+El buffer de recepción es ignorado por todos los procesos excepto por el proceso raíz. Esto implica que, como norma general, únicamente el proceso raíz debería reservar memoria para este. Todos los argumentos son importantes para el proceso raíz, mientras que para el resto de procesos solo se tiene en cuenta los argumentos sendbuf, sendcount, sendtype, root, comm. El valor de los argumentos root y comm debe ser idéntico en todos los procesos.
+
+Cabe destacar, una vez más, que el argumento recvcount indica la cantidad de elementos que se espera recibir individualmente de cada proceso, no el total de elementos que recibe.
+
+`MPI_Gather` es la operación inversa de [](#MPI_Scatter).
+:::
+
+(MPI_Barrier)=
+:::{note} `MPI_Barrier()`
+:class: dropdown
+:open: false
+
+**Sintaxis**
+```{code} C
+int MPI_Barrier(MPI_Comm comm)
+```
+
+**Descripción**
+
+Bloquea al proceso que realiza la llamada hasta que todos los miembros del grupo lo hayan llamado. La función devuelve el control al proceso solo cuando todos los procesos pertenecientes al grupo hayan realizado la llamada.
+:::
+
 
 (MPI_Wtime)=
 :::{note} `MPI_Wtime()`
