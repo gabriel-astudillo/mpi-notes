@@ -207,6 +207,28 @@ int MPI_Bcast(void *buffer,           // Dirección inicial del buffer (a enviar
 MPI_Bcast envía un único mensaje desde el proceso que tenga el rango de raíz (root) a todos los procesos del grupo (en general, los del comunicador especificado), incluyendose a sí mismo. Todos los procesos llaman a la función exactamente de la misma manera, usando siempre los mismos argumentos para comm (el comunicador) y para el proceso raíz (root). Cuando se haya completado la función, todos los procesos tendrán una copia en su buffer de entrada de lo enviado por el proceso raíz.
 
 En general los tipos de datos derivados están permitidos para el parámetro datatype. La concordancia en tamaño entre los tipos de datos especificados por los procesos receptores y del emisor debe ser igual. Esto implica que la cantidad de datos enviados debe ser la misma cantidad que los datos recibidos entre cada proceso con la raíz (root). Todas las rutinas de envío y recepción de datos a colectivos (o entre colectivos) tienen esta restricción impuesta.
+
+**Ejemplo**
+
+Suponga que se tiene un **communicator** con 4 procesos y que el proceso $P0$ (Rank 0) debe enviar a todos los procesos todos los datos del vector $V$. La {numref}`Figura %s <02-01-bcast>`) muestra esta situación. Es importante aclarar que el proceso root ya posee el dato original, por lo que no se lo *envía* a sí mismo a través del canal de comunicación. Todos los procesos del comunicador (incluido el root) **ejecutan la misma llamada a MPI_Bcast**.
+
+```{figure} images/02-01-bcast.png
+:label:02-01-bcast
+:width: 70%
+:align: center
+```
+
+Si `V` es un arreglo de `int` que tiene los datos originales. Esta función envía todo el contenido a todos los procesos. El arreglo `V` se uso para guardar los datos recibidos.
+
+```{code} C
+int MPI_Bcast(&V,       // Dirección inicial del buffer (a enviar para la raíz y a recibir por el resto).
+              3,        // Número de elementos en el buffer (int).
+              MPI_INT,  // Tipo de dato de los elementos del buffer (Por ejemplo, `MPI_INT`).
+			  0,        // Rank del proceso que transmitirá el mensaje al resto (int).
+              comm      // Comunicador por el que se realiza la transmisión.
+              )
+```
+
 :::
 
 (MPI_Reduce)=
@@ -294,6 +316,37 @@ Esto significa que el mensaje original se parte en n partes iguales, que es exac
 Esto significa que la cantidad de datos enviados debe ser la misma que el conjunto de los datos recibidos. Todos los argumentos de la función son importantes para el proceso raíz, sin embargo para el resto de procesos únicamente se tiene en cuenta los argumentos `recvbuf`, `recvcount`, `recvtype`, `root`. Los argumentos `root` y `comm` deben tener un valor idéntico en todos los procesos.
 
 `MPI_Scatter` es la operación inversa de [](#MPI_Gather).
+
+**Ejemplo**
+
+Suponga que se tiene un **communicator** con 4 procesos y que el proceso $P0$ (Rank 0) debe enviar a todos los procesos un trozo de igual tamaño del vector $V$. Cada proceso guarda su trozo en un vector $R$. La {numref}`Figura %s <comm-size>` muestra esta situación.
+
+```{figure} images/02-01-scatter.png
+:label:02-01-scatter
+:width: 70%
+:align: center
+```
+
+Si `V` es un arreglo de `int` que tiene los datos originales y `R` es un arreglo que va a guardar los datos recibidos, entonces la función que implementa la situación es la siguiente:
+
+```{code} C
+int MPI_Scatter(&V,         // Dirección inicial del buffer de salida.
+                            // Útil sólo para el proceso raíz, el resto 
+                            // de procesos ignoran este parámetro.
+                2,          // Número de elementos que se envía a cada 
+                            // proceso del comunicador. Sólo tiene sentido 
+                            // en el proceso raíz.
+                MPI_INT,    // Tipo de dato que se va a enviar
+                &R,         // Direción del buffer de recepción (para todos 
+                            // los procesos, incluido el proceso raíz).
+                2,          // Número de elementos que espera recibir
+                            // cada proceso.
+                MPI_INT,    // Tipo de datos de los elementos a recibir 
+                0,          // Rank del proceso raíz (el que realizará el envío).
+                comm        // Comunicador 
+                )
+```
+
 :::
 
 (MPI_Gather)=
@@ -326,14 +379,49 @@ int MPI_Gather(void *sendbuf,          // Dirección inicial del buffer de enví
 
 Cada proceso (incluido el proceso raíz) envía el contenido de su buffer de salida al proceso raíz. El proceso raíz recibe los mensajes y los guarda por el orden del rango de cada proceso. El resultado final es que se reune en el proceso raíz el mensaje completo y ordenado.
 
-De forma alternativa, podemos explicarlo como que los n mensajes son concatenados por el orden del rango, resultando en un único mensaje como si se tratara de una operación de recepción normal (MPI_Recv(recvbuf, recvcount* n, recvtype, ...)).
+De forma alternativa, podemos explicarlo como que los $n$ mensajes son concatenados por el *orden del rango*, resultando en un único mensaje como si se tratara de una operación de recepción normal (`MPI_Recv(recvbuf, recvcount* n, recvtype, ...)`).
 
 El buffer de recepción es ignorado por todos los procesos excepto por el proceso raíz. Esto implica que, como norma general, únicamente el proceso raíz debería reservar memoria para este. Todos los argumentos son importantes para el proceso raíz, mientras que para el resto de procesos solo se tiene en cuenta los argumentos sendbuf, sendcount, sendtype, root, comm. El valor de los argumentos root y comm debe ser idéntico en todos los procesos.
 
 Cabe destacar, una vez más, que el argumento recvcount indica la cantidad de elementos que se espera recibir individualmente de cada proceso, no el total de elementos que recibe.
 
 `MPI_Gather` es la operación inversa de [](#MPI_Scatter).
+
+**Ejemplo**
+
+Suponga que se tiene un **communicator** con 4 procesos. Cada uno de ellos tiene un arreglo $S$ con datos. Se requiere que el proceso $P1$ (que tiene el Rank $1$) reciba todos los datos y los junte en un sólo arreglo $R$. La {numref}`Figura %s <02-01-gather>` muestra esta situación.
+
+```{figure} images/02-01-gather.png
+:label:02-01-gather
+:width: 70%
+:align: center
+```
+
+Si `S` es el arreglo de `int` en donde cada proceso tiene los datos originales y `R` es un arreglo que va a guardar los datos recibidos, entonces la función que implementa la situación es la siguiente:
+
+```{code} C
+int MPI_Gather(&S,         // Dirección inicial del buffer de envío.
+               3,          // Número de elementos que va a enviar cada proceso 
+                                       // individualmente, en general, el número de elementos 
+                                       // del buffer de envío.
+               MPI_INT,    // Tipo de dato de cada elemento del buffer de envío.
+               &R,         // Dirección inicial del buffer de recepción.
+                           // Útil solamente para el proceso raíz.
+               3,          // Número de elementos que se espera recibir de cada 
+                           // uno de los procesos (solo el proceso raíz tendrá este 
+                           // parámetro en cuenta). Nótese que este valor es igual 
+                           // que sendcount siempre y cuando los tipos de envío y 
+                           // recepción sean los mismos.
+               MPI_INT,    // Tipo de dato que se espera recibir en el buffer de 
+                           // entrada. Útil únicamente para el proceso raíz.
+               1,          // Rank del proceso raíz (el proceso receptor) 
+               comm        // Comunicator
+               )
+```
+
 :::
+
+
 
 (MPI_Barrier)=
 :::{note} `MPI_Barrier()`
