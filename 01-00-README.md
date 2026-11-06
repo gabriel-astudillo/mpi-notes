@@ -12,7 +12,15 @@ Para realizar el envío y recepción de datos, utiliza los siguientes tipos de c
 
 ## Estructura de una solución basada en MPI
 
-Un programa {abbr}`MPI (Message Passing Interface)` crea un ambiente paralelo llamado `MPI_COMM_WORLD`. La cantidad de procesos que se van a crear dentro de este ambiente es un parámetro del comando `mpirun` ([explicado acá](#ejecucion)).
+Un programa {abbr}`MPI (Message Passing Interface)`, a través de un modelo de programación **fork-join** crea un ambiente paralelo llamado `MPI_COMM_WORLD` (ver {numref}`Figura %s <comm-size>`). La cantidad de procesos que se van a crear dentro de este ambiente es un parámetro del comando `mpirun` ([explicado acá](#ejecucion)). Cada proceso tiene un identificador numérico enterio que se llama `rank`. Además, la estructura del communicator contiene la cantidad de procesos creados dentro de él. Este dato se puede obtener a traves de la función  [](#MPI_Comm_size).
+
+```{figure} images/02-01-modelo-prog.png
+:label:02-01-modelo-prog
+:width: 100%
+:align: center
+
+```
+
 
 (implementacion)=
 ## Implementación de programas basados en MPI
